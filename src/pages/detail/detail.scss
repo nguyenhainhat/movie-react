@@ -1,0 +1,174 @@
+@use "../../scss/" as *;
+
+.banner {
+  height: 90vh;
+  position: relative;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    @include overlay();
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background-image: linear-gradient(to top, $body-bg, rgba($black, 0));
+  }
+}
+
+.movie-content {
+  @include flex(center, flex-start);
+  margin-top: -68vh;
+  position: relative;
+  padding: 0 2rem;
+
+  @include mobile {
+    margin-top: -78vh;
+  }
+
+  &_poster {
+    flex: 1;
+
+    &_img {
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      border-radius: $border-radius;
+      padding-top: 135%;
+    }
+  }
+
+  &_info {
+    width: 70%;
+    padding-left: 2rem;
+    position: relative;
+
+    @include mobile {
+      width: 100%;
+      padding-left: 0;
+    }
+
+    & > * {
+      margin-bottom: 2rem;
+    }
+
+    .title {
+      font-size: 4rem;
+      line-height: 1;
+    }
+
+    .genres {
+      & > * ~ * {
+        margin-left: 0.5rem;
+      }
+
+      &_item {
+        padding: 0.5rem 1.5rem;
+        border: 2px solid $white;
+        border-radius: $border-radius;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background-color: $body-bg;
+      }
+    }
+  }
+}
+
+.casts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 10px;
+
+  &_item {
+    &_img {
+      background-position: center;
+      padding-top: 160px;
+      background-size: cover;
+      margin-bottom: 0.5rem;
+    }
+
+    &_name {
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.videoList {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  .video {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 3rem;
+    margin-top: auto;
+    width: calc(100% / 2 - 20px * 2);
+    @include mobile {
+      width: 100%;
+    }
+    &_title {
+      margin-bottom: 1.5rem;
+    }
+    &_iframe {
+      height: 30vw;
+      box-shadow: $box-shadow-light;
+      @include mobile {
+        height: 72vw;
+      }
+    }
+  }
+}
+
+.season {
+  position: relative;
+  display: flex;
+  &-item {
+    width: 20%;
+    margin: 20px;
+    border-radius: $border-radius-sm;
+  }
+  &-episodes {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    &_item {
+      max-width: 236px;
+      img {
+        border-radius: $border-radius-sm;
+      }
+    }
+    & .swiper-slide {
+      width: auto;
+    }
+  }
+  .swiper-button-next,
+  .swiper-button-prev {
+    top: 35%;
+    &::after {
+      color: rgba($color: $white, $alpha: 0.6);
+    }
+    &:hover {
+      &::after {
+        color: rgba($color: $white, $alpha: 1);
+      }
+    }
+  }
+  .swiper-pagination-bullet,
+  .swiper-pagination-bullet-active {
+    background-color: $white;
+  }
+}

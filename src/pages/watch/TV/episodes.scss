@@ -1,0 +1,9 @@
+@use "../../../scss/" as *;
+@use "../../detail/detail.scss";
+
+.iframe {
+    position: relative;
+    top: 100px;
+    width: 50%;
+    height: 300px;
+}
