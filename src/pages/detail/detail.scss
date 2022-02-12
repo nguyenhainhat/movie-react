@@ -134,12 +134,17 @@
 }
 
 .season {
-  position: relative;
-  display: flex;
+  // position: relative;
+  // display: flex;
   &-item {
-    width: 20%;
-    margin: 20px;
-    border-radius: $border-radius-sm;
+    width: 100%;
+    text-align: center;
+    img {
+      width: 90%;
+      height: 20vw;
+      max-height: 270px;
+      border-radius: $border-radius-sm;
+    }
   }
   &-episodes {
     width: 80%;
@@ -155,15 +160,19 @@
       width: auto;
     }
   }
-  .swiper-button-next,
+  
+  
+}
+
+.swiper-button-next,
   .swiper-button-prev {
     top: 35%;
     &::after {
-      color: rgba($color: $white, $alpha: 0.6);
+      color: rgba($color: $white, $alpha: 1);
     }
     &:hover {
       &::after {
-        color: rgba($color: $white, $alpha: 1);
+        color: rgba($color: $white, $alpha: 0.8);
       }
     }
   }
@@ -171,4 +180,6 @@
   .swiper-pagination-bullet-active {
     background-color: $white;
   }
+.swiper-slide {
+  width: 20%;
 }

@@ -1,9 +1,75 @@
 @use "../../../scss/" as *;
-@use "../../detail/detail.scss";
 
 .iframe {
-    position: relative;
-    top: 100px;
-    width: 50%;
-    height: 300px;
+  position: relative;
+  top: 100px;
+  width: 50%;
+  height: 300px;
+}
+
+.episode-container {
+  position: relative;
+  .active {
+    color: red;
+  }
+}
+
+.pageEpisodes {
+  position: relative;
+  height: 56vw;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    @include size(100%, 100%);
+    @include overlay();
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    @include size(100%, 100%);
+    background-image: linear-gradient(to top, $body-bg, rgba($black, 0));
+  }
+  img {
+    border-radius: $border-radius-sm;
+  }
+  &-container {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    z-index: 1;
+    @include mobile {
+      flex-direction: column;
+    }
+  }
+  &-season {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    box-shadow: 0 0 17px 2px rgba(88, 67, 56, 0.7), inset 0 0 69px 39px rgba(42, 35, 34, 0.5);
+    background-color: rgba($black, 0.8);
+    border-radius: $border-radius-sm;
+  }
+
+  &-item {
+    width: calc(65% - 20px);
+  }
+  .swiper-button-next,
+  .swiper-button-prev {
+    top: 30%;
+    padding: 30px;
+  }
 }

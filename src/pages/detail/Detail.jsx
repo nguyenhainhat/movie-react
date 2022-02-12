@@ -47,6 +47,8 @@ const Detail = () => {
     getMovies();
   }, []);
 
+  console.log(item)
+
   const setModalActive = useCallback(async() => {
     const modal = document.querySelector('.modal');
     modal.setAttribute("id", `modal_${id}`)
@@ -99,7 +101,7 @@ const Detail = () => {
               </div>
               <p className="overview">{item.overview}</p>
               <div className="btns">
-                <Button onClick={() => {category === 'tv' ?  history('watch/season/1/episode/1') :  history('watch')}}>Watch Now</Button>
+                <Button onClick={() => {category === 'tv' ?  history('watch/season/1/episodes/1') :  history('watch')}}>Watch Now</Button>
                 <OutlineButton onClick={setModalActive}>Watch trailer</OutlineButton>
               </div>
               <div className="cast">
@@ -112,7 +114,7 @@ const Detail = () => {
           <div className="container">
             {category === "tv" ? (
               <div className="section mb-3">
-                <h2 className="mb-1">Current Season</h2>
+                <h2 className="mb-1">Current Season: {item.seasons.length} seasons </h2>
                 <Season id={item.id} item={item} />
               </div>
             ) : (
