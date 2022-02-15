@@ -100,6 +100,9 @@ const Detail = () => {
                   ))}
               </div>
               <p className="overview">{item.overview}</p>
+              <div className="vote">
+                  {item.vote_average} / 10 <i class='bx bxs-star'></i> ({item.vote_count} vote) 
+              </div>
               <div className="btns">
                 <Button onClick={() => {category === 'tv' ?  history('watch/season/1/episodes/1') :  history('watch')}}>Watch Now</Button>
                 <OutlineButton onClick={setModalActive}>Watch trailer</OutlineButton>

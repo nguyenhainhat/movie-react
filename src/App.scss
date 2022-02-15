@@ -82,6 +82,28 @@ iframe {
   padding: 0 2rem;
 }
 
+.bxs-star {
+  color: yellow;
+}
+
+.vote {
+  font-size: 1.2rem;
+}
+
 .section__header {
   @include flex(center, space-between);
+}
+
+.h-100 {
+  height: 100px;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 30px;
 }

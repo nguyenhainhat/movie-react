@@ -1,18 +1,20 @@
-import React, {useState, useEffect, useCallback, useLayoutEffect, useRef} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import "./episodes.scss";
+// import 
 
-import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
+import {Link, useLocation, useParams} from "react-router-dom";
 
 import {embedMovie, embedEpisode} from "../../../api/constants";
 import tmdbApi, {category as cate, movieType} from "../../../api/tmdbApi";
 import apiConfig from "../../../api/apiConfig";
+import useWindowDimensions from "../../../hooks/useWindowDimensions";
+import MoviesList from "../../../components/movies-list/MoviesList";
 
 const Episodes = () => {
-  const {category, id, season, episode} = useParams();
+  const {id, season, episode} = useParams();
   // Được thừa hưởng từ season, episode trong Link của season và season được thừa hưởng ID ở page detail
 
   const [episodes, setEpisodes] = useState([]);
-  const [item, setItem] = useState([]);
 
   useEffect(() => {
     const getEpisodes = async () => {
@@ -23,6 +25,23 @@ const Episodes = () => {
     getEpisodes();
   }, [id, season, episode]);
 
+  return (
+    <>
+      <WatchItem episodes={episodes} />
+    </>
+  );
+};
+
+export const WatchItem = (props) => {
+  const [item, setItem] = useState([]);
+  const [similar, setSimilar] = useState();
+  const [resizeItem, setResizeItem] = useState(false)
+  const { height, width } = useWindowDimensions()
+
+
+  const episodeRef = useRef(null);
+  const {category, id, season, episode} = useParams();
+  const episodes = props.episodes ? props.episodes : "";
   useEffect(() => {
     const getDetail = async () => {
       const params = {};
@@ -33,32 +52,102 @@ const Episodes = () => {
     getDetail();
   }, [category, id]);
 
-  // console.log(item.seasons, season)
+  useEffect(() => {
+    const getSmilar = async () => {
+      const params = {params: 1};
+      const response = await tmdbApi.similar(category, id, {params});
+      setSimilar(response.results.slice(0, 15));
+      window.scrollTo(0, 0);
+    };
+    getSmilar();
+  }, [category, id]);
+
 
   return (
-      <div>a</div>
-    // <div
-    //   className="banner"
-    //   style={{backgroundImage: `url(${apiConfig.originalImage(episodes.still_path)})`}}>
-    //   <div className="container mb-3">
-    //     {/* <iframe
-    //       className="iframe"
-    //       width="100%"
-    //       height={"100%"}
-    //       src={embedEpisode(id, season, episode)}
-    //       title="Movie player"
-    //       frameBorder="0"
-    //       allowFullScreen></iframe> */}
-    //   </div>
-    //   <div className="episode-container">
-    //   episode: 
-    //     {item !== undefined && item.seasons !== undefined ? (
-    //       <EpisodesItem id={id} item={item} seasons={season} />
-    //     ) : (
-    //       ""
-    //     )}
-    //   </div>
-    // </div>
+    <div
+      className="episode banner"
+    >
+      <div className="h-100"></div>
+      <div className="container">
+        <div className="episode_left">
+          <iframe
+            className="iframe"
+            width="100%"
+            height={"100%"}
+            src={category === 'tv' ? embedEpisode(id, season, episode) : embedMovie(id)}
+            title="Movie player"
+            frameBorder="0"
+            allowFullScreen></iframe>
+          {category === "movie" ? (
+            ""
+          ) : (
+            <div className="episode_left-title">
+              {item.name} episode {episodes.episode_number} (Season {episodes.season_number})
+            </div>
+          )}
+          <div className="episode_left-description">
+            {category !== "movie"
+              ? episodes.overview
+              : `${item.title} (${new Date(
+                  item.first_air_date || item.release_date
+                ).getFullYear()})`}{" "}
+          </div>
+          {category !== "movie" && (
+            <div className="episode_left-container">
+              <span>Episode:</span>
+              <div className="episode_left-content">
+                {item !== undefined && item.seasons !== undefined ? (
+                  <EpisodesItem id={id} item={item} category={category} seasons={season} />
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="episode_right">
+          {width >= 600 ? 
+            <div className="episode_right-row" ref={episodeRef}>
+              <h2>Similar</h2>
+              {resizeItem ? 'abc' : 
+              <div className="episode_right-container">
+                {similar !== undefined &&
+                  similar.map((item, i) => (
+                    <ItemSimilar key={i} id={item.id} category={category} item={item} />
+                  ))}
+              </div>
+              }
+            </div>
+          : category !==undefined && (
+            <MoviesList category={category} type="similar" id={id} />
+          )
+          }
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const ItemSimilar = (props) => {
+  const item = props.item;
+  return (
+    <Link to={`/${props.category}/${item.id}`} className="episode_right-link">
+      <div className="episode_right-content">
+        <div className="episode_right-content-img">
+          <img
+            src={`${apiConfig.w500Image(item.poster_path || item.backdrop_path)}`}
+            alt={item.name}
+          />
+          <div className="vote">
+            <span>{item.vote_average.toFixed(1)}</span>
+          </div>
+        </div>
+        <div className="episode_right-content-title">
+          <h4>{item.name || item.title}</h4>
+          <p>{new Date(item.first_air_date || item.release_date).getFullYear()}</p>
+        </div>
+      </div>
+    </Link>
   );
 };
 
@@ -67,7 +156,6 @@ const EpisodesItem = (props) => {
   const {id} = useParams();
   const linkRef = useRef();
   const {pathname} = useLocation();
-
 
   let episodes = seasons.episodes;
   useEffect(() => {
@@ -86,21 +174,18 @@ const EpisodesItem = (props) => {
     <>
       {episodes !== undefined
         ? episodes.map((item, i) => {
-        let linkItem = `/tv/${id}/watch/season/${item.season_number}/episodes/${item.episode_number}`;
-        return item.season_number === seasons.season_number ? (
-              <Link
-              to={`${linkItem}`}
-              className={ pathname === linkItem ? 'active' : ''}
-                key={i}>
-                <div className='episodes-item' ref={linkRef.item}>
+            let linkItem = `/tv/${id}/watch/season/${item.season_number}/episodes/${item.episode_number}`;
+            return item.season_number === seasons.season_number ? (
+              <Link to={`${linkItem}`} className={pathname === linkItem ? "active" : ""} key={i}>
+                <div className="episode_left-item" ref={linkRef.item}>
                   {item.episode_number}
                 </div>
               </Link>
             ) : (
               ""
-              )
-            })
-          : ""}
+            );
+          })
+        : ""}
     </>
   );
 };
