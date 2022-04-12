@@ -1,4 +1,4 @@
 - Call API từ lấy thông tin movie và video phim từ 2 link
-- Link Thông tin movie: https://developers.themoviedb.org/3/getting-started/introduction?fbclid=IwAR24x1XQMtV8tVCBNBa-WhTgo1VvWTL3oyCssIVqfZKv_n9HYB7NZNl86NE
-- Link video: https://www.2embed.ru/?fbclid=IwAR1V-XyF-Tk2LcjXbjZBsfaY48bsMvUoeWCQdRuSAklmWaDULjb4S4USJTs
+- Link Thông tin movie: https://www.themoviedb.org/
+- Link video: https://www.2embed.ru/
 - Demo: http://movie-react-nhat17.surge.sh/
